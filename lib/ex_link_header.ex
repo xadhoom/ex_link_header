@@ -35,6 +35,9 @@ defmodule ExLinkHeader do
   def create(%ExLinkHeader{} = h) do
     "<" <> h.url <> ">; rel=\"" <> h.relation <> "\""
   end
+  def create(headers) when is_list headers do
+    Enum.map_join(headers, ", ", fn(h) -> ExLinkHeader.create(h) end)
+  end
 
   defp extract(links) do
     Enum.filter_map(links, fn(link) ->
