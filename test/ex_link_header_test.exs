@@ -244,6 +244,28 @@ defmodule ExLinkHeaderTest do
       }
   end
 
+  test "create a link with query params" do
+    rel = "next"
+    url = "http://www.example.com"
+
+    link = %ExLinkHeader{url: url,
+      relation: rel,
+      q_params: [q: "elixir", page: 5]
+      }
+    link_h = ExLinkHeader.create(link) 
+
+    assert link_h == "<" <> url <> "?q=elixir&page=5>; rel=\"" <> rel <> "\""
+
+    assert ExLinkHeader.parse!(link_h) ==
+      %{rel => %{
+          url: url <> "?q=elixir&page=5",
+          rel: rel,
+          q: "elixir",
+          page: "5"
+        }
+      }
+  end
+
   test "create some simple links" do
     rel_a = "next"
     url_a = "http://www.example.com"
