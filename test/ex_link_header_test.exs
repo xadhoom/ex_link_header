@@ -209,4 +209,23 @@ defmodule ExLinkHeaderTest do
     assert_raise ParseError, fn -> ExLinkHeader.parse!("nonsense") end
   end
 
+  test "create a simple link" do
+    rel = "next"
+    url = "http://www.example.com"
+
+    link = %ExLinkHeader{url: url,
+      relation: rel
+      }
+    link_h = ExLinkHeader.create(link) 
+
+    assert link_h == "<" <> url <> ">; rel=\"" <> rel <> "\""
+
+    assert ExLinkHeader.parse!(link_h) ==
+      %{rel => %{
+          url: url,
+          rel: rel
+        }
+      }
+  end
+
 end

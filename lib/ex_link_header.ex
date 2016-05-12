@@ -4,6 +4,10 @@ defmodule ExLinkHeader do
   HTTP link header parser
   """
 
+  defstruct url: :nil,
+    relation: :nil,
+    q_params: %{}
+    
   @regex_format ~r{<?(.+)>; (.+)}
 
   defmodule ParseError do
@@ -26,6 +30,10 @@ defmodule ExLinkHeader do
       {:ok, result} -> result
       :error -> raise ParseError, "Parse error: no valid links to parse"
     end
+  end
+
+  def create(%ExLinkHeader{} = h) do
+    "<" <> h.url <> ">; rel=\"" <> h.relation <> "\""
   end
 
   defp extract(links) do
