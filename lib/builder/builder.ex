@@ -7,9 +7,9 @@ defmodule ExLinkHeader.Builder do
   """
 
   def build(%ExLinkHeader{} = h) do
-    q = Enum.map_join(Keyword.keys(h.q_params), "&", fn(key) ->
+    q = Enum.map_join(Map.keys(h.q_params), "&", fn(key) ->
       # TODO: sanitize me
-      val = case Keyword.get(h.q_params, key) do
+      val = case Map.get(h.q_params, key) do
         v when is_integer(v) -> Integer.to_string(v)  
         v when is_atom(v) -> Atom.to_string(v)
         v when is_binary(v) -> v

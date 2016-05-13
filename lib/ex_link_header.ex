@@ -6,7 +6,7 @@ defmodule ExLinkHeader do
 
   defstruct url: :nil,
     relation: :nil,
-    q_params: []
+    q_params: %{}
     
   defmodule ParseError do
     @moduledoc """

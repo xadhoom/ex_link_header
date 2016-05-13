@@ -12,7 +12,7 @@ defmodule ExLinkHeaderBuildTest do
 
     link = %ExLinkHeader{url: url,
       relation: rel,
-      q_params: [q: 'elixir']
+      q_params: %{q: 'elixir'}
       }
     assert_raise BuildError, fn -> ExLinkHeader.build(link) end
   end
@@ -42,15 +42,19 @@ defmodule ExLinkHeaderBuildTest do
 
     link = %ExLinkHeader{url: url,
       relation: rel,
-      q_params: [q: "elixir", page: 5]
+      q_params: %{page: 5, q: "elixir"}
       }
     link_h = ExLinkHeader.build(link) 
 
-    assert link_h == "<" <> url <> "?q=elixir&page=5>; rel=\"" <> rel <> "\""
+    # these assertions may fail, since Maps are not ordered.
+    # need to find a way to better check without relying on
+    # ordering
+
+    assert link_h == "<" <> url <> "?page=5&q=elixir>; rel=\"" <> rel <> "\""
 
     assert ExLinkHeader.parse!(link_h) ==
       %{rel => %{
-          url: url <> "?q=elixir&page=5",
+          url: url <> "?page=5&q=elixir",
           rel: rel,
           q: "elixir",
           page: "5"
