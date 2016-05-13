@@ -1,4 +1,4 @@
-defmodule ExLinkHeaderTest do
+defmodule ExLinkHeaderParseTest do
   use ExUnit.Case
   doctest ExLinkHeader
 
@@ -223,77 +223,6 @@ defmodule ExLinkHeaderTest do
   test "parsing an empty or invalid link header raises" do
     assert_raise ParseError, fn -> ExLinkHeader.parse!("") end
     assert_raise ParseError, fn -> ExLinkHeader.parse!("nonsense") end
-  end
-
-  test "create a simple link" do
-    rel = "next"
-    url = "http://www.example.com"
-
-    link = %ExLinkHeader{url: url,
-      relation: rel
-      }
-    link_h = ExLinkHeader.create(link) 
-
-    assert link_h == "<" <> url <> ">; rel=\"" <> rel <> "\""
-
-    assert ExLinkHeader.parse!(link_h) ==
-      %{rel => %{
-          url: url,
-          rel: rel
-        }
-      }
-  end
-
-  test "create a link with query params" do
-    rel = "next"
-    url = "http://www.example.com"
-
-    link = %ExLinkHeader{url: url,
-      relation: rel,
-      q_params: [q: "elixir", page: 5]
-      }
-    link_h = ExLinkHeader.create(link) 
-
-    assert link_h == "<" <> url <> "?q=elixir&page=5>; rel=\"" <> rel <> "\""
-
-    assert ExLinkHeader.parse!(link_h) ==
-      %{rel => %{
-          url: url <> "?q=elixir&page=5",
-          rel: rel,
-          q: "elixir",
-          page: "5"
-        }
-      }
-  end
-
-  test "create some simple links" do
-    rel_a = "next"
-    url_a = "http://www.example.com"
-
-    link_a = %ExLinkHeader{url: url_a,
-      relation: rel_a
-      }
-
-    rel_b = "prev"
-    url_b = "http://www.example.com"
-    link_b = %ExLinkHeader{url: url_b,
-      relation: rel_b
-      }
-
-    link_h = ExLinkHeader.create([link_a, link_b])
-    assert link_h == "<" <> url_a <> ">; rel=\"" <> rel_a <> "\", " <>
-      "<" <> url_b <> ">; rel=\"" <> rel_b <> "\""
-
-    assert ExLinkHeader.parse!(link_h) ==
-      %{rel_a => %{
-          url: url_a,
-          rel: rel_a
-        },
-        rel_b => %{
-          url: url_b,
-          rel: rel_b
-        }
-      }
   end
 
 end
